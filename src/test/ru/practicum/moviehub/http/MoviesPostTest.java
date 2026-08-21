@@ -15,35 +15,27 @@ public class MoviesPostTest extends MoviesApiTest {
 
     @Test
     void postMovie_whenDataIsValid_createsMovie() throws Exception {
-
-        String json = """
-                {
-                    "title": "Матрица",
-                    "year": 1999
-                }
-                """;
+        String json = movieJson("Матрица", 1999);
 
         HttpResponse<String> response = sendPost(json);
 
         assertEquals(201, response.statusCode());
 
-        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
+        assertEquals(
+                "application/json; charset=UTF-8",
+                response.headers()
+                        .firstValue("Content-Type")
+                        .orElse("")
+        );
 
         assertTrue(response.body().contains("\"id\""));
         assertTrue(response.body().contains("Матрица"));
         assertTrue(response.body().contains("1999"));
     }
 
-
     @Test
     void postMovie_whenTitleIsEmpty_returns422() throws Exception {
-
-        String json = """
-                {
-                    "title": "",
-                    "year": 1999
-                }
-                """;
+        String json = movieJson("", 1999);
 
         HttpResponse<String> response = sendPost(json);
 
@@ -52,19 +44,11 @@ public class MoviesPostTest extends MoviesApiTest {
         assertTrue(response.body().contains("\"error\""));
         assertTrue(response.body().contains("\"details\""));
     }
-
 
     @Test
     void postMovie_whenTitleIsTooLong_returns422() throws Exception {
-
         String title = "a".repeat(101);
-
-        String json = """
-                {
-                    "title": "%s",
-                    "year": 1999
-                }
-                """.formatted(title);
+        String json = movieJson(title, 1999);
 
         HttpResponse<String> response = sendPost(json);
 
@@ -73,17 +57,10 @@ public class MoviesPostTest extends MoviesApiTest {
         assertTrue(response.body().contains("\"error\""));
         assertTrue(response.body().contains("\"details\""));
     }
-
 
     @Test
     void postMovie_whenYearIsLessThan1888_returns422() throws Exception {
-
-        String json = """
-                {
-                    "title": "Матрица",
-                    "year": 1887
-                }
-                """;
+        String json = movieJson("Матрица", 1887);
 
         HttpResponse<String> response = sendPost(json);
 
@@ -92,19 +69,13 @@ public class MoviesPostTest extends MoviesApiTest {
         assertTrue(response.body().contains("\"error\""));
         assertTrue(response.body().contains("\"details\""));
     }
-
 
     @Test
-    void postMovie_whenYearIsGreaterThanCurrentYearPlusOne_returns422() throws Exception {
+    void postMovie_whenYearIsGreaterThanCurrentYearPlusOne_returns422()
+            throws Exception {
 
         int invalidYear = Year.now().getValue() + 2;
-
-        String json = """
-                {
-                    "title": "Матрица",
-                    "year": %d
-                }
-                """.formatted(invalidYear);
+        String json = movieJson("Матрица", invalidYear);
 
         HttpResponse<String> response = sendPost(json);
 
@@ -113,49 +84,54 @@ public class MoviesPostTest extends MoviesApiTest {
         assertTrue(response.body().contains("\"error\""));
         assertTrue(response.body().contains("\"details\""));
     }
-
 
     @Test
     void postMovie_whenContentTypeIsWrong_returns415() throws Exception {
+        String json = movieJson("Матрица", 1999);
 
-        String json = """
-                {
-                    "title": "Матрица",
-                    "year": 1999
-                }
-                """;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE + "/movies"))
+                .header("Content-Type", "text/plain")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
 
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "text/plain").POST(HttpRequest.BodyPublishers.ofString(json)).build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpResponse<String> response = client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+        );
 
         assertEquals(415, response.statusCode());
-
         assertTrue(response.body().contains("\"error\""));
     }
 
-
     @Test
     void postMovie_whenJsonIsInvalid_returns400() throws Exception {
-
-        String json = """
-                {
-                    "title": "Матрица",
-                    "year":
-                """;
+        String json = "{\"title\":\"Матрица\",\"year\":}";
 
         HttpResponse<String> response = sendPost(json);
 
         assertEquals(400, response.statusCode());
-
         assertTrue(response.body().contains("\"error\""));
     }
 
+    private String movieJson(String title, int year) {
+        return String.format(
+                "{\"title\":\"%s\",\"year\":%d}",
+                title,
+                year
+        );
+    }
 
     private HttpResponse<String> sendPost(String json) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE + "/movies"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
 
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(json)).build();
-
-        return client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8)
+        );
     }
 }
