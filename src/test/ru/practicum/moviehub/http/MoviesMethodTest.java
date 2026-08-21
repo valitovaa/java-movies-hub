@@ -15,26 +15,13 @@ public class MoviesMethodTest extends MoviesApiTest {
     @Test
     void whenMethodIsNotSupported_returns405() throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .PUT(HttpRequest.BodyPublishers.noBody())
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).PUT(HttpRequest.BodyPublishers.noBody()).build();
 
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(405, response.statusCode());
 
-        assertEquals(
-                "application/json; charset=UTF-8",
-                response.headers()
-                        .firstValue("Content-Type")
-                        .orElse("")
-        );
+        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
         assertTrue(response.body().contains("\"error\""));
     }

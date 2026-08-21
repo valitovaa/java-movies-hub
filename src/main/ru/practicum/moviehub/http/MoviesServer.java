@@ -15,10 +15,7 @@ public class MoviesServer {
 
     public MoviesServer(MoviesStore moviesStore, int i) throws IOException {
         this.moviesStore = moviesStore;
-        this.server = HttpServer.create(
-                new InetSocketAddress(i),
-                0
-        );
+        this.server = HttpServer.create(new InetSocketAddress(i), 0);
 
         server.createContext("/movies", new MoviesHandler(moviesStore));
         server.setExecutor(null);

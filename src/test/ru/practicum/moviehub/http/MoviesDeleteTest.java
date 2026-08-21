@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MoviesDeleteTest extends MoviesApiTest {
 
     @Test
-    void deleteMovieById_whenMovieExists_deletesMovie()
-            throws Exception {
+    void deleteMovieById_whenMovieExists_deletesMovie() throws Exception {
 
         int id = moviesStore.addMovie(
                 new Movie("Матрица", 1999)

@@ -133,8 +133,7 @@ public class MoviesHandler extends BaseHttpHandler {
             return;
         }
 
-        sendError(ex, 405, "Метод не поддерживается", List.of()
-        );
+        sendError(ex, 405, "Метод не поддерживается", List.of());
     }
 
     private Integer parseMovieId(HttpExchange ex) throws IOException {

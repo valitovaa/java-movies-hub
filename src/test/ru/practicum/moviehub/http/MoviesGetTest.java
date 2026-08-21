@@ -16,27 +16,13 @@ public class MoviesGetTest extends MoviesApiTest {
     @Test
     void getMovies_whenEmpty_returnsEmptyArray() throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).GET().build();
 
-        HttpResponse<String> response =
-                client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString(
-                                StandardCharsets.UTF_8
-                        )
-                );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(200, response.statusCode());
 
-        assertEquals(
-                "application/json; charset=UTF-8",
-                response.headers()
-                        .firstValue("Content-Type")
-                        .orElse("")
-        );
+        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
         assertEquals("[]", response.body().trim());
     }
@@ -47,18 +33,9 @@ public class MoviesGetTest extends MoviesApiTest {
         moviesStore.addMovie(new Movie("Матрица", 1999));
         moviesStore.addMovie(new Movie("Интерстеллар", 2014));
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).GET().build();
 
-        HttpResponse<String> response =
-                client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString(
-                                StandardCharsets.UTF_8
-                        )
-                );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(200, response.statusCode());
 

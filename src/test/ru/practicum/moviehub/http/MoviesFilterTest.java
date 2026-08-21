@@ -21,26 +21,13 @@ public class MoviesFilterTest extends MoviesApiTest {
         moviesStore.addMovie(new Movie("Интерстеллар", 2014));
         moviesStore.addMovie(new Movie("Другой фильм", 1999));
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies?year=1999"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies?year=1999")).GET().build();
 
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(200, response.statusCode());
 
-        assertEquals(
-                "application/json; charset=UTF-8",
-                response.headers()
-                        .firstValue("Content-Type")
-                        .orElse("")
-        );
+        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
         assertTrue(response.body().contains("Матрица"));
         assertTrue(response.body().contains("Другой фильм"));
@@ -53,17 +40,9 @@ public class MoviesFilterTest extends MoviesApiTest {
 
         moviesStore.addMovie(new Movie("Матрица", 1999));
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies?year=2020"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies?year=2020")).GET().build();
 
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(200, response.statusCode());
 
@@ -74,17 +53,9 @@ public class MoviesFilterTest extends MoviesApiTest {
     @Test
     void getMoviesByYear_whenYearIsNotNumber_returns400() throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies?year=abc"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies?year=abc")).GET().build();
 
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(400, response.statusCode());
 

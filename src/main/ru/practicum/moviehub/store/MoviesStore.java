@@ -39,19 +39,11 @@ public class MoviesStore {
 
 
     public List<MovieResponse> filterMoviesByYear(int neededYear) {
-        return movies.entrySet().stream()
-                .filter(entry -> entry.getValue().getYear() == neededYear)
-                .map(entry -> new MovieResponse(
-                        entry.getKey(),
-                        entry.getValue()
-                ))
-                .toList();
+        return movies.entrySet().stream().filter(entry -> entry.getValue().getYear() == neededYear).map(entry -> new MovieResponse(entry.getKey(), entry.getValue())).toList();
     }
 
     public List<MovieResponse> getAllMovies() {
-        return movies.entrySet().stream()
-                .map(entry -> new MovieResponse(entry.getKey(), entry.getValue()))
-                .toList();
+        return movies.entrySet().stream().map(entry -> new MovieResponse(entry.getKey(), entry.getValue())).toList();
     }
 
     public void deleteMovieById(int id) {

@@ -27,12 +27,7 @@ public class MoviesPostTest extends MoviesApiTest {
 
         assertEquals(201, response.statusCode());
 
-        assertEquals(
-                "application/json; charset=UTF-8",
-                response.headers()
-                        .firstValue("Content-Type")
-                        .orElse("")
-        );
+        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
         assertTrue(response.body().contains("\"id\""));
         assertTrue(response.body().contains("Матрица"));
@@ -81,8 +76,7 @@ public class MoviesPostTest extends MoviesApiTest {
 
 
     @Test
-    void postMovie_whenYearIsLessThan1888_returns422()
-            throws Exception {
+    void postMovie_whenYearIsLessThan1888_returns422() throws Exception {
 
         String json = """
                 {
@@ -101,8 +95,7 @@ public class MoviesPostTest extends MoviesApiTest {
 
 
     @Test
-    void postMovie_whenYearIsGreaterThanCurrentYearPlusOne_returns422()
-            throws Exception {
+    void postMovie_whenYearIsGreaterThanCurrentYearPlusOne_returns422() throws Exception {
 
         int invalidYear = Year.now().getValue() + 2;
 
@@ -123,8 +116,7 @@ public class MoviesPostTest extends MoviesApiTest {
 
 
     @Test
-    void postMovie_whenContentTypeIsWrong_returns415()
-            throws Exception {
+    void postMovie_whenContentTypeIsWrong_returns415() throws Exception {
 
         String json = """
                 {
@@ -133,18 +125,9 @@ public class MoviesPostTest extends MoviesApiTest {
                 }
                 """;
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .header("Content-Type", "text/plain")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "text/plain").POST(HttpRequest.BodyPublishers.ofString(json)).build();
 
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(415, response.statusCode());
 
@@ -153,8 +136,7 @@ public class MoviesPostTest extends MoviesApiTest {
 
 
     @Test
-    void postMovie_whenJsonIsInvalid_returns400()
-            throws Exception {
+    void postMovie_whenJsonIsInvalid_returns400() throws Exception {
 
         String json = """
                 {
@@ -170,20 +152,10 @@ public class MoviesPostTest extends MoviesApiTest {
     }
 
 
-    private HttpResponse<String> sendPost(String json)
-            throws Exception {
+    private HttpResponse<String> sendPost(String json) throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(json)).build();
 
-        return client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString(
-                        StandardCharsets.UTF_8
-                )
-        );
+        return client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 }

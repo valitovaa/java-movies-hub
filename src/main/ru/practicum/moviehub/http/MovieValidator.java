@@ -21,9 +21,7 @@ public class MovieValidator {
         int currentYear = Year.now().getValue();
 
         if (movie.getYear() < 1888 || movie.getYear() > currentYear + 1) {
-            errors.add(
-                    "год должен быть между 1888 и " + (currentYear + 1)
-            );
+            errors.add("год должен быть между 1888 и " + (currentYear + 1));
         }
 
         return errors;

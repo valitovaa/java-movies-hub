@@ -24,9 +24,7 @@ public abstract class MoviesApiTest {
         server = new MoviesServer(moviesStore, 8080);
         server.start();
 
-        client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(2))
-                .build();
+        client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
     }
 
     @BeforeEach
