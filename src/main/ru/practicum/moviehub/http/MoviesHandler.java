@@ -9,8 +9,6 @@ import ru.practicum.moviehub.store.MoviesStore;
 
 import java.io.IOException;
 
-import com.google.gson.JsonSyntaxException;
-
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
