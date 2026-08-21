@@ -3,12 +3,9 @@ package ru.practicum.moviehub.store;
 import ru.practicum.moviehub.model.Movie;
 import ru.practicum.moviehub.model.MovieResponse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-//создать класс MoviesStore, отвечающий за хранение, добавление, поиск и удаление фильмов;
 
 public class MoviesStore {
 
@@ -57,7 +54,7 @@ public class MoviesStore {
                 .toList();
     }
 
-    public void deleteMovieById(int id){
+    public void deleteMovieById(int id) {
         movies.remove(id);
     }
 

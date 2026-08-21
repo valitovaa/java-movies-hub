@@ -25,7 +25,6 @@ public class MoviesServer {
     }
 
 
-
     public void start() {
         server.start();
     }
